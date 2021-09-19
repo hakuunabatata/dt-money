@@ -1,33 +1,49 @@
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
+
 import { Container } from "./styles";
 
-export const TransactionsTable = () => (
-  <>
-    <Container>
-      <table>
-        <thead>
-          <tr>
-            <th>Titulo</th>
-            <th>Valor</th>
-            <th>Categoria</th>
-            <th>Data</th>
-          </tr>
-        </thead>
+export const TransactionsTable = () => {
+  const [transactions, setTransactions] = useState([]);
 
-        <tbody>
-          <tr>
-            <td>Website Development</td>
-            <td className="deposit">R$12.000</td>
-            <td>Desenvolvimento</td>
-            <td>20/09/21</td>
-          </tr>
-          <tr>
-            <td>Aluguel</td>
-            <td className="withdraw"> - R$1.500</td>
-            <td>Moradia</td>
-            <td>20/09/21</td>
-          </tr>
-        </tbody>
-      </table>
-    </Container>
-  </>
-);
+  useEffect(() => {
+    api.get("transactions").then(({ data }) => setTransactions(data));
+  }, []);
+
+  return (
+    <>
+      <Container>
+        <table>
+          <thead>
+            <tr>
+              <th>Titulo</th>
+              <th>Valor</th>
+              <th>Categoria</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {transactions.map(
+              ({ id, title, amount, type, category, createdAt }) => (
+                <tr key={id}>
+                  <td>{title}</td>
+                  <td className={type}>
+                    R$
+                    {" " +
+                      [
+                        String(amount).split(".")[0],
+                        String(amount).split(".")[1] || "00",
+                      ].join(",")}
+                  </td>
+                  <td>{category}</td>
+                  <td>{createdAt}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </Container>
+    </>
+  );
+};
