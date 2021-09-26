@@ -14,24 +14,29 @@ export const Summary = () => {
   const { transactions } = useContext(TransactionsContext);
 
   useEffect(() => {
-    let incomeTotal = 0;
-    let outcomeTotal = 0;
-    let totalTotal = 0;
-
-    transactions.forEach(({ type, amount }) => {
-      if (type === "deposit") {
-        incomeTotal += amount;
-        totalTotal += amount;
+    const { deposits, withdraws, all } = transactions.reduce(
+      ({ deposits, withdraws, all }, { type, amount }) =>
+        type === "deposit"
+          ? {
+              deposits: deposits + amount,
+              withdraws: withdraws,
+              all: all + amount,
+            }
+          : {
+              deposits: deposits,
+              withdraws: withdraws + amount,
+              all: all - amount,
+            },
+      {
+        deposits: 0,
+        withdraws: 0,
+        all: 0,
       }
-      if (type === "withdraw") {
-        outcomeTotal += amount;
-        totalTotal += amount;
-      }
-    });
+    );
 
-    setIncome(incomeTotal);
-    setOutcome(outcomeTotal);
-    setTotal(totalTotal);
+    setIncome(deposits);
+    setOutcome(withdraws);
+    setTotal(all);
   }, [transactions]);
 
   return (
@@ -55,14 +60,17 @@ export const Summary = () => {
             <img src={outcomeImg} alt="Saidas" />
           </header>
           <strong>
-            -
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
               currency: "BRL",
             }).format(outcome)}
           </strong>
         </div>
-        <div className="highlight-background">
+        <div
+          className={`highlight-background ${
+            total < 0 ? "negative" : "positive"
+          }`}
+        >
           <header>
             <p>Total</p>
             <img src={totalImg} alt="Total" />

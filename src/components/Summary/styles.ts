@@ -27,8 +27,15 @@ export const Container = styled.div`
     }
 
     &.highlight-background {
-      background: var(--green);
       color: #fff;
+    }
+
+    &.positive {
+      background: var(--green);
+    }
+
+    &.negative {
+      background: var(--red);
     }
   }
 `;
