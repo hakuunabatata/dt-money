@@ -42,14 +42,17 @@ export const TransactionsTable = () => {
                     <td>{title}</td>
                     <td className={type}>
                       R$
-                      {" " +
-                        [
-                          String(amount).split(".")[0],
-                          String(amount).split(".")[1] || "00",
-                        ].join(",")}
+                      {new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(amount)}
                     </td>
                     <td>{category}</td>
-                    <td>{createdAt}</td>
+                    <td>
+                      {new Intl.DateTimeFormat("pt-BR").format(
+                        new Date(createdAt)
+                      )}
+                    </td>
                   </tr>
                 )
               )
