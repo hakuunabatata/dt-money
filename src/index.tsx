@@ -34,10 +34,12 @@ createServer({
 
     this.get("/transactions", () => this.schema.all("transaction"));
 
-    this.post("/transactions", (schema, { requestBody }) => {
-      const data = JSON.parse(requestBody);
+    this.post("/transactions", (schema, request) => {
+      console.log(request);
 
-      return schema.create(data);
+      const data = JSON.parse(request.requestBody);
+
+      return schema.create("transaction", data);
     });
   },
 });
