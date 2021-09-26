@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import incomeImg from "../../assets/income.svg";
 import outcomeImg from "../../assets/outcome.svg";
 import totalImg from "../../assets/total.svg";
-import { TransactionsContext } from "../../TransactionsContext";
-
+import { useTransactions } from "../../hooks/useTransactions";
 import { Container } from "./styles";
 
 export const Summary = () => {
@@ -11,7 +10,7 @@ export const Summary = () => {
   const [outcome, setOutcome] = useState(0);
   const [total, setTotal] = useState(0);
 
-  const { transactions } = useContext(TransactionsContext);
+  const { transactions } = useTransactions();
 
   useEffect(() => {
     const { deposits, withdraws, all } = transactions.reduce(
